@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
 
-class StateFormPrincipal(ABC):
+class StateViewConfiguracao(ABC):
 
     def __init__(self):
-        self._estado: StateFormPrincipal
+        self._estado: StateViewConfiguracao
 
     @abstractmethod
     def estadoSimulacao(self):

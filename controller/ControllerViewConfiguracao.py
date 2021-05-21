@@ -2,8 +2,8 @@ from view.viewConfiguracao import *
 from PyQt5 import QtCore, QtWidgets
 from model.Amostra import Amostra
 from model.Tabela import Tabela
-from stateviewprincipal.EstadoSimulacaoFormPrincipal import EstadoSimulacaoFormPrincipal
-from stateviewprincipal.EstadoSemSimulacaoFormPrincipal import EstadoSemSimulacaoFormPrincipal
+from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
+from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
 
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):

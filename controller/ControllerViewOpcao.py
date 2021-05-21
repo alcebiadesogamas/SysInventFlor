@@ -4,8 +4,8 @@ from PyQt5 import QtCore
 from controller.ControllerViewDialogo import ControllerViewDialogo
 from controller.ControllerViewMetodo import ControllerViewMetodo
 # from stateviewprincipal.StateFormPrincipal import StateFormPrincipal
-from stateviewprincipal.EstadoSemSimulacaoFormPrincipal import EstadoSemSimulacaoFormPrincipal
-from stateviewprincipal.EstadoSimulacaoFormPrincipal import EstadoSimulacaoFormPrincipal
+from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
+from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
 
 
 class ControllerViewOpcao(QMainWindow, Ui_ViewOpcao):
@@ -31,12 +31,12 @@ class ControllerViewOpcao(QMainWindow, Ui_ViewOpcao):
 
     def semSimular(self):
         self.window = QtWidgets.QMainWindow()
-        self.ui = ControllerViewMetodo(EstadoSemSimulacaoFormPrincipal())
+        self.ui = ControllerViewMetodo(EstadoSemSimulacaoViewConfiguracao())
         self.ui.show()
         self.close()
 
     def simular(self):
         self.window = QtWidgets.QMainWindow()
-        self.ui = ControllerViewMetodo(EstadoSimulacaoFormPrincipal())
+        self.ui = ControllerViewMetodo(EstadoSimulacaoViewConfiguracao())
         self.ui.show()
         self.close()
