@@ -25,14 +25,17 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.setErroAmostragem()
         self.setTaxaIntervalo()
         self.campoAmostra()
-        self.btnCalcular.clicked.connect(self.operaAmostra)
+        self.btnCalcular.clicked.connect(self.calculoSemSimular) # tratar para calculoComSimulacao
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
+        self.diretorioPopulacao: str
+        self.tipoAmostragem: str
 
     def campoAmostra(self):
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
             self.tfAmostras.setEnabled(False)
             self.label_7.setEnabled(False)
-            # self.label_7.setText('Quantidade de Simulações:')
+            self.tfNumeroSimulacoes.setEnabled(False)
+            self.lblNSimulacoes.setEnabled(False)
 
     def setSignificancia(self):
         self.cbSignificancia.setCurrentIndex(0)
@@ -48,8 +51,14 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.spbTaxaIntervalo.setRange(0, 100)
         self.spbTaxaIntervalo.setSuffix('%')
 
-    def operaAmostra(self, diretorio: str = '', tipo: str = ''):
-        tabela = Tabela(diretorio='resources/tabelat.xlsx')
+    def btnVoltarPressed(self):
+        self.ui = cvm.ControllerViewMetodo(self.state)
+        self.ui.show()
+        self.close()
+
+    def calculoSemSimular(self):
+        tabela = Tabela(diretorio='resources/ACS.xlsx')
+        print('diretorio:', self.diretorioPopulacao, 'tipo:', self.tipoAmostragem)
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
@@ -57,12 +66,6 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
 
             tabela.setValoresTtabelado(self.cbSignificancia.currentText().strip('%'), int(areaTotal / areaParcela))
         except ValueError:
-            ...
-        print(self.state)
+            print('deu ruim')
         print(tabela.valoresTtabelado)
-        amostra = Amostra(tipo)
-
-    def btnVoltarPressed(self):
-        self.ui = cvm.ControllerViewMetodo(self.state)
-        self.ui.show()
-        self.close()
+        amostra = Amostra(self.tipoAmostragem)
