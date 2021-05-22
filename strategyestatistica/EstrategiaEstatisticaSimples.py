@@ -8,28 +8,28 @@ class HandlerEstatistica:
 
     def __init__(self, estatistica: Estatistica, ttabelado: Tabela, amostra: list, populacao: Populacao,
                  nivelSignificancia: float):
-        self._estatistica: Estatistica = estatistica
-        self._amostra = amostra
-        self._ttabelado = ttabelado
-        self._populacao = populacao
-        self._nivelSignificancia = nivelSignificancia
+        self.estatistica: Estatistica = estatistica
+        self.amostra = amostra
+        self.ttabelado = ttabelado
+        self.populacao = populacao
+        self.nivelSignificancia = nivelSignificancia
 
     def calculate(self):
-        self._estatistica.somatorio = np.sum(self._amostra)
-        self._estatistica.somatorioQuadrado = np.sum(np.power(self._amostra, 2))
-        self._estatistica.media = np.mean(self._amostra)
-        self._estatistica.variancia = np.var(self._amostra)
-        self._estatistica.desvioPadrao = np.std(self._amostra)
+        self.estatistica.somatorio = np.sum(self.amostra)
+        self.estatistica.somatorioQuadrado = np.sum(np.power(self.amostra, 2))
+        self.estatistica.media = np.mean(self.amostra)
+        self.estatistica.variancia = np.var(self.amostra)
+        self.estatistica.desvioPadrao = np.std(self.amostra)
 
-        self._estatistica.coeficienteDeVariacao = (self._estatistica.variancia / self._estatistica.media) * 100
-        self._estatistica.fFracaoDeAmostragem = (len(self._amostra) / self._populacao.totalParcelas)
+        self.estatistica.coeficienteDeVariacao = (self.estatistica.variancia / self.estatistica.media) * 100
+        self.estatistica.fFracaoDeAmostragem = (len(self.amostra) / self.populacao.totalParcelas)
 
-        if self._estatistica.fFracaoDeAmostragem <= 0.05:
-            self._populacao.tipo = 'Finita'
-            self._estatistica.varianciaDaMedia = (self._estatistica.variancia / len(self._amostra))
+        if self.estatistica.fFracaoDeAmostragem <= 0.05:
+            self.populacao.tipo = 'Finita'
+            self.estatistica.varianciaDaMedia = (self.estatistica.variancia / len(self.amostra))
         else:
-            self._populacao.tipo = 'Infinita'
-            self._estatistica.varianciaDaMedia = (self._estatistica.variancia / len(self._amostra)) * (1 - self._estatistica.fFracaoDeAmostragem)
-        self._estatistica.erroPadraoDaMedia = self._estatistica.varianciaDaMedia ** (1 / 2)
-        self._estatistica.erroDeAmostragemAbsoluto = self._estatistica.erroPadraoDaMedia * self._ttabelado.valoresTtabelado[0]
-        self._estatistica.erroDeAmostragemRelativo = (self._estatistica.erroDeAmostragemAbsoluto / self._estatistica.media) * 100
+            self.populacao.tipo = 'Infinita'
+            self.estatistica.varianciaDaMedia = (self.estatistica.variancia / len(self.amostra)) * (1 - self.estatistica.fFracaoDeAmostragem)
+        self.estatistica.erroPadraoDaMedia = self.estatistica.varianciaDaMedia ** (1 / 2)
+        self.estatistica.erroDeAmostragemAbsoluto = self.estatistica.erroPadraoDaMedia * self.ttabelado.valoresTtabelado[0]
+        self.estatistica.erroDeAmostragemRelativo = (self.estatistica.erroDeAmostragemAbsoluto / self.estatistica.media) * 100

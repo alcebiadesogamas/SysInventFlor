@@ -40,9 +40,7 @@ class ControllerViewMetodo(QMainWindow, Ui_ViewMetodo):
         elif self.rbAS.isChecked():
             tipo = 'AS'
         self.window = QtWidgets.QMainWindow()
-        self.ui = ControllerViewConfiguracao(self.state)
-        self.ui.diretorioAmostra = self.leArquivo.text()
-        self.ui.tipoAmostragem = tipo
+        self.ui = ControllerViewConfiguracao(self.state, diretorioAmostra=self.leArquivo.text(), tipo = tipo)
         self.ui.show()
         self.close()
 

@@ -2,13 +2,16 @@ from view.viewConfiguracao import *
 from PyQt5 import QtCore, QtWidgets
 from model.Amostra import Amostra
 import model.Tabela as tabela
-from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
+import model.Estatistica as estatistica
+import model.Populacao as populacao
 from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
 import controller.controllerViewMetodo as cvm
 import pandas as pd
+import strategyestatistica.EstrategiaEstatisticaSimples as estatisticaACS
+import controller.controllerViewSaida as cvs
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
-    def __init__(self, state, parent=None):
+    def __init__(self, state, diretorioAmostra, tipo, parent=None):
         super().__init__(parent)
         super().setupUi(self)
         self.state = state
@@ -28,8 +31,8 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.campoAmostra()
         self.btnCalcular.clicked.connect(self.calculoSemSimular) # tratar para calculoComSimulacao
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
-        self.diretorioAmostra: str
-        self.tipoAmostragem: str
+        self.diretorioAmostra = diretorioAmostra
+        self.tipoAmostragem = tipo
 
     def campoAmostra(self):
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
@@ -62,16 +65,33 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
+            
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
-            print(self.cbSignificancia.currentText().strip('%'))
+            nivelSignificancia = self.cbSignificancia.currentText().strip('%')
+            tb.setValoresTtabelado(nivelSignificancia, len(self.getAmostras()))
 
-            tb.setValoresTtabelado(self.cbSignificancia.currentText().strip('%'), self.qtdAmostrasPopulcao())
+            amostra = Amostra(self.tipoAmostragem)
+            amostra.amostras = self.getAmostras()
+            
+            estatAmostra = estatistica.Estatistica()
+
+            pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
+
+            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra,ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
+
+            estACS.calculate()
+
+            
+            
+            self.window = QtWidgets.QMainWindow()
+            self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra, tipo=self.tipoAmostragem)
+            self.ui.show()
+            self.close()
+
         except ValueError:
             print('Erro ao ler amostras')
-        amostra = Amostra(self.tipoAmostragem)
-
-    def qtdAmostrasPopulcao(self):
+        
+    def getAmostras(self):
         tbAmostra = pd.read_excel(self.diretorioAmostra)
         tbAmostra = tbAmostra['Variavel'].values.tolist()
-        qtd = len(tbAmostra)
-        return qtd
+        return tbAmostra
