@@ -4,7 +4,7 @@ from model.Amostra import Amostra
 from model.Tabela import Tabela
 from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
 from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
-
+import controller.controllerViewMetodo as cvm
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
     def __init__(self, state, parent=None):
@@ -26,6 +26,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.setTaxaIntervalo()
         self.campoAmostra()
         self.btnCalcular.clicked.connect(self.operaAmostra)
+        self.btnVoltar.clicked.connect(self.btnVoltarPressed)
 
     def campoAmostra(self):
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
@@ -60,3 +61,8 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         print(self.state)
         print(tabela.valoresTtabelado)
         amostra = Amostra(tipo)
+
+    def btnVoltarPressed(self):
+        self.ui = cvm.ControllerViewMetodo(self.state)
+        self.ui.show()
+        self.close()

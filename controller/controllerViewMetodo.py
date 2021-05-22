@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QStyle, QFileDialog
 from view.viewMetodo import *
-from controller.ControllerViewConfiguracao import ControllerViewConfiguracao
-
+from controller.controllerViewConfiguracao import ControllerViewConfiguracao
+import controller.controllerViewOpcao as cvo
 
 class ControllerViewMetodo(QMainWindow, Ui_ViewMetodo):
 
@@ -20,7 +20,7 @@ class ControllerViewMetodo(QMainWindow, Ui_ViewMetodo):
                 QtWidgets.qApp.desktop().availableGeometry()
             )
         )
-        # self.btnVoltar.clicked.connect()
+        self.btnVoltar.clicked.connect(self.btnVoltarPressed)
         self.setFixedSize(self.width(), self.height())
 
     def openFile(self) -> None:
@@ -46,4 +46,7 @@ class ControllerViewMetodo(QMainWindow, Ui_ViewMetodo):
         self.close()
 
     def btnVoltarPressed(self):
-        ...
+        self.ui = cvo.ControllerViewOpcao()
+        self.ui.show()
+        self.close()
+        

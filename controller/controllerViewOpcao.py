@@ -1,9 +1,8 @@
 from view.viewOpcao import *
 from PyQt5.QtWidgets import QMainWindow, QStyle
 from PyQt5 import QtCore
-from controller.ControllerViewDialogo import ControllerViewDialogo
-from controller.ControllerViewMetodo import ControllerViewMetodo
-# from stateviewprincipal.StateFormPrincipal import StateFormPrincipal
+from controller.controllerViewDialogo import ControllerViewDialogo
+from controller.controllerViewMetodo import ControllerViewMetodo
 from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
 from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
 
