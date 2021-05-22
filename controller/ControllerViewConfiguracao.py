@@ -9,7 +9,8 @@ from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSi
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
     def __init__(self, state, parent=None):
         super().__init__(parent)
-        super().setupUi(self, state=state)
+        super().setupUi(self)
+        self.state = state
         self.setGeometry(
             QtWidgets.QStyle.alignedRect(
                 QtCore.Qt.LeftToRight,
@@ -27,7 +28,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.btnCalcular.clicked.connect(self.operaAmostra)
 
     def campoAmostra(self):
-        if isinstance(self.state, EstadoSemSimulacaoFormPrincipal):
+        if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
             self.tfAmostras.setEnabled(False)
             self.label_7.setEnabled(False)
             # self.label_7.setText('Quantidade de Simulações:')

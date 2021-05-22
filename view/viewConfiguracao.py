@@ -9,9 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from stateviewconfiguracao.StateViewConfiguracao import * 
 
 
 class Ui_ViewConfiguracao(object):
+    
     def setupUi(self, ViewConfiguracao):
         ViewConfiguracao.setObjectName("ViewConfiguracao")
         ViewConfiguracao.resize(539, 600)
