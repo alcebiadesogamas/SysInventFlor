@@ -1,10 +1,11 @@
 from view.viewConfiguracao import *
 from PyQt5 import QtCore, QtWidgets
 from model.Amostra import Amostra
-from model.Tabela import Tabela
+import model.Tabela as tabela
 from stateviewconfiguracao.EstadoSimulacaoViewConfiguracao import EstadoSimulacaoViewConfiguracao
 from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSimulacaoViewConfiguracao
 import controller.controllerViewMetodo as cvm
+import pandas as pd
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
     def __init__(self, state, parent=None):
@@ -27,7 +28,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.campoAmostra()
         self.btnCalcular.clicked.connect(self.calculoSemSimular) # tratar para calculoComSimulacao
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
-        self.diretorioPopulacao: str
+        self.diretorioAmostra: str
         self.tipoAmostragem: str
 
     def campoAmostra(self):
@@ -57,15 +58,20 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.close()
 
     def calculoSemSimular(self):
-        tabela = Tabela(diretorio='resources/ACS.xlsx')
-        print('diretorio:', self.diretorioPopulacao, 'tipo:', self.tipoAmostragem)
+        tb = tabela.Tabela(diretorio='resources/tabelat.xlsx')
+        
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
-            print(int(areaTotal / areaParcela))
+            print(self.cbSignificancia.currentText().strip('%'))
 
-            tabela.setValoresTtabelado(self.cbSignificancia.currentText().strip('%'), int(areaTotal / areaParcela))
+            tb.setValoresTtabelado(self.cbSignificancia.currentText().strip('%'), self.qtdAmostrasPopulcao())
         except ValueError:
-            print('deu ruim')
-        print(tabela.valoresTtabelado)
+            print('Erro ao ler amostras')
         amostra = Amostra(self.tipoAmostragem)
+
+    def qtdAmostrasPopulcao(self):
+        tbAmostra = pd.read_excel(self.diretorioAmostra)
+        tbAmostra = tbAmostra['Variavel'].values.tolist()
+        qtd = len(tbAmostra)
+        return qtd

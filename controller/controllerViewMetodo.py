@@ -41,7 +41,7 @@ class ControllerViewMetodo(QMainWindow, Ui_ViewMetodo):
             tipo = 'AS'
         self.window = QtWidgets.QMainWindow()
         self.ui = ControllerViewConfiguracao(self.state)
-        self.ui.diretorioPopulacao = self.leArquivo.text()
+        self.ui.diretorioAmostra = self.leArquivo.text()
         self.ui.tipoAmostragem = tipo
         self.ui.show()
         self.close()

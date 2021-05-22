@@ -19,9 +19,9 @@ class Tabela:
     def valoresTtabelado(self) -> list:
         return self._valoresTtabelado
         
-    def setValoresTtabelado(self, nivelSignificancia, qtdNdeParcelas) -> None:
-        df_tabela_t = pd.read_excel(self._diretorio)  # exemplo: 'c:/Curso_Python/tabelat.xlsx'
-        prob = df_tabela_t.columns.values
+    def setValoresTtabelado(self, nivelSignificancia, qtdAmostras) -> None:
+        df_tabela_t = pd.read_excel(self._diretorio)
+        prob = (df_tabela_t.columns.values)
         tabela_t: list = list()
         for i in range(5):
             coluna_t = df_tabela_t[prob[i]].values.tolist()
@@ -37,9 +37,10 @@ class Tabela:
         elif nivelSignificancia == 10:
             t1 = 3
             t2 = 4
-        self._valoresTtabelado.append(tabela_t[t1][qtdNdeParcelas - 2])
-        self._valoresTtabelado.append(tabela_t[t2][qtdNdeParcelas - 2])
+        self._valoresTtabelado.append(tabela_t[t1][qtdAmostras - 2])
+        self._valoresTtabelado.append(tabela_t[t2][qtdAmostras - 2])
 
 
 if __name__ == '__main__':
-    ...
+    pass
+    
