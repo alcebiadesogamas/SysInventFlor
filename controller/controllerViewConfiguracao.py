@@ -68,7 +68,9 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
             nivelSignificancia = self.cbSignificancia.currentText().strip('%')
-            tb.setValoresTtabelado(nivelSignificancia, len(self.getAmostras()))
+            tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostras()))
+            print(nivelSignificancia, len(self.getAmostras()))
+            print(tb.valoresTtabelado)
 
             amostra = Amostra(self.tipoAmostragem)
             amostra.amostras = self.getAmostras()
