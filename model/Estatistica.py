@@ -3,18 +3,21 @@
 class Estatistica:
 
     def __init__(self):
-        self.media: float 
-        self.somatorio: float 
-        self.somatorioQuadrado: float 
-        self.desvioPadrao: float 
-        self.variancia: float 
-        self.coeficienteDeVariacao: float 
-        self.varianciaDaMedia: float 
-        self.erroPadraoDaMedia: float 
-        self.erroDeAmostragemAbsoluto: float 
-        self.erroDeAmostragemRelativo: float 
-        self.fFracaoDeAmostragem: float 
-        self.fatorDeCorrecao: float 
+        self.media: float = 0.0
+        self.somatorio: float = 0.0
+        self.somatorioQuadrado: float = 0.0 
+        self.desvioPadrao: float = 0.0 
+        self.variancia: float = 0.0
+        self.coeficienteDeVariacao: float = 0.0
+        self.varianciaDaMedia: float = 0.0
+        self.erroPadraoDaMedia: float = 0.0
+        self.erroDeAmostragemAbsoluto: float = 0.0 
+        self.erroDeAmostragemRelativo: float = 0.0
+        self.fFracaoDeAmostragem: float = 0.0
+        self.fatorDeCorrecao: float = 0.0
+        self.ttab = 0.0
+        self.nivelSignificancia = 0.0
+        self.tamAmostra = 0.0
 
     # @property
     # def media(self):

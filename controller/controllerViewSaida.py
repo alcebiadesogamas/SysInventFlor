@@ -13,6 +13,7 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
         self.tipo = tipo
         self.estatistica = estatistica
         self.imprimirResultado()
+        self.teSaida.setReadOnly(True)
         #opens the window in screen's center
         self.setGeometry(
             QtWidgets.QStyle.alignedRect(
@@ -37,7 +38,17 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
         self.close()
     
     def imprimirResultado(self):
-        string = '        ESTATÍSTICAS DA AMOSTRAGEM CASUAL SIMPLES           ' + '-'*63 + ' PARÂMETRO ESTIMADO                 '+ 'ESTIMATIVA DO PARÂMETRO' + '-'*63 
-        self.teSaida.setText(string + str(self.estatistica.media))
+        string = ' '*30 +'ESTATÍSTICAS DA AMOSTRAGEM CASUAL SIMPLES           \n'+'-'*122 + '\n PARÂMETRO ESTIMADO'+ ' '*30 +'ESTIMATIVA DO PARÂMETRO\n' + '-'*122 + '\n' 
+        string += (f' Média                                                                               {self.estatistica.media:>10.4f}\n')
+        string += (f' Variância                                                                          {self.estatistica.variancia:>10.4f}\n')
+        string += (f' Desvio Padrão                                                                  {self.estatistica.desvioPadrao:>10.4f}\n')
+        string += (f' Coeficiente de variação                                                   {self.estatistica.coeficienteDeVariacao:>10.4f}\n')
+        string += (f' Variância da média                                                            {self.estatistica.varianciaDaMedia:>10.4f}\n')
+        string += (f' Erro padrão da média                                                        {self.estatistica.erroPadraoDaMedia:>10.4f}\n')
+        string += (f' Erro de amostragem absoluto                                           {self.estatistica.erroDeAmostragemAbsoluto:>10.4f}\n')
+        string += (f' Erro de amostragem relativo                                            {self.estatistica.erroDeAmostragemRelativo:>10.4f}\n')
+        string += ('-'*122)
+        # string += (f'O valor de ttab. bicaldal ({n - 1}; {ns}%) = {ttab:.2f}')
+        self.teSaida.setText(string )
         
     

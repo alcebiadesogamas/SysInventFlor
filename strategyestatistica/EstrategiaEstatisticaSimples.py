@@ -21,7 +21,7 @@ class HandlerEstatistica:
         self.estatistica.variancia = np.var(self.amostra)
         self.estatistica.desvioPadrao = np.std(self.amostra)
 
-        self.estatistica.coeficienteDeVariacao = (self.estatistica.variancia / self.estatistica.media) * 100
+        self.estatistica.coeficienteDeVariacao = (self.estatistica.desvioPadrao / self.estatistica.media) * 100
         self.estatistica.fFracaoDeAmostragem = (len(self.amostra) / self.populacao.totalParcelas)
 
         if self.estatistica.fFracaoDeAmostragem <= 0.05:
