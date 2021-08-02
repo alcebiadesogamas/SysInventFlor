@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
+    <width>543</width>
     <height>600</height>
    </rect>
   </property>
@@ -20,22 +20,6 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="3" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_5">
-      <item>
-       <spacer name="horizontalSpacer_9">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Minimum</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
@@ -64,9 +48,12 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>220</width>
           <height>20</height>
          </size>
         </property>
@@ -145,7 +132,7 @@
       <item>
        <widget class="QRadioButton" name="rbIntensidadeAmostral">
         <property name="text">
-         <string>Intensidade Amostral</string>
+         <string>Calcular Intensidade Amostral?</string>
         </property>
        </widget>
       </item>
@@ -220,6 +207,23 @@
     <item row="1" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Tamanho Da Amostra:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="tfAmostras">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_18">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -236,37 +240,14 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="lblNSimulacoes">
         <property name="text">
-         <string>Quantidade De Amostras:</string>
+         <string>Nº de Simulações:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="tfAmostras">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_17">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       <widget class="QLineEdit" name="tfNumeroSimulacoes"/>
       </item>
      </layout>
     </item>
@@ -304,29 +285,6 @@
       </item>
       <item>
        <spacer name="horizontalSpacer_8">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="lblNSimulacoes">
-        <property name="text">
-         <string>Nº de Simulações</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="tfNumeroSimulacoes"/>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -394,9 +352,6 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Minimum</enum>
-        </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
@@ -427,9 +382,12 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>280</width>
           <height>20</height>
          </size>
         </property>
@@ -444,8 +402,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>539</width>
-     <height>22</height>
+     <width>543</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

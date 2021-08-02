@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>534</width>
-    <height>501</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,7 +36,7 @@
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Preferred</enum>
+       <enum>QSizePolicy::Fixed</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -46,16 +46,12 @@
       </property>
      </spacer>
     </item>
-    <item row="9" column="0">
-     <widget class="QPushButton" name="btnVoltar">
-      <property name="text">
-       <string>Voltar</string>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="0" colspan="5">
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="1">
+       <widget class="QLineEdit" name="leArquivo"/>
+      </item>
+      <item row="0" column="2">
        <widget class="QPushButton" name="btnSelecionar">
         <property name="text">
          <string>Selecionar</string>
@@ -63,16 +59,52 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLineEdit" name="leArquivo"/>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Arquivo:</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
-    <item row="2" column="1">
-     <widget class="QLabel" name="label_2">
+    <item row="9" column="0">
+     <widget class="QPushButton" name="btnVoltar">
       <property name="text">
-       <string>Arquivo:</string>
+       <string>Voltar</string>
       </property>
      </widget>
+    </item>
+    <item row="5" column="4">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="1">
+     <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>30</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item row="0" column="0" colspan="5">
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -114,7 +146,7 @@
          <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -143,7 +175,7 @@
          <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -169,7 +201,7 @@
          <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -181,6 +213,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="rbAS">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
         <property name="locale">
          <locale language="Portuguese" country="Brazil"/>
         </property>
@@ -190,38 +225,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="5" column="4">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Preferred</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="1">
-     <spacer name="verticalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Preferred</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>30</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item row="9" column="4">
      <widget class="QPushButton" name="btnOK">
