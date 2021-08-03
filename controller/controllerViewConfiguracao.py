@@ -61,7 +61,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.close()
 
     def calculoSemSimular(self):
-        tb = tabela.Tabela(diretorio='resources/tabelat.xlsx')
+        tb = tabela.Tabela(diretorio='C:/Users/Nubia/Documents/SysInventFlor/resources/tabelat.xlsx')
         
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
