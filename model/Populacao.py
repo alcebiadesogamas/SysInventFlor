@@ -1,13 +1,13 @@
 class Populacao:
 
     def __init__(self, areaParcelas=0, areaTotal=0) -> None:
-        self._areaParcelas: int = areaParcelas
+        self._areaParcelas: float = areaParcelas
         self._areaTotal: float = areaTotal
         self._totalParcelas: float = areaTotal/areaParcelas
         self._tipo: str = ''
 
     @property
-    def totalParcelas(self) -> int:
+    def totalParcelas(self) -> float:
         return self._totalParcelas
 
     @totalParcelas.setter

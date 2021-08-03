@@ -8,6 +8,7 @@ from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSi
 import controller.controllerViewMetodo as cvm
 import pandas as pd
 import strategyestatistica.EstrategiaEstatisticaSimples as estatisticaACS
+import strategyamostra.EstrategiaCasualSimples as simulation
 import controller.controllerViewSaida as cvs
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
@@ -29,7 +30,10 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.setErroAmostragem()
         self.setTaxaIntervalo()
         self.campoAmostra()
-        self.btnCalcular.clicked.connect(self.calculoSemSimular) # tratar para calculoComSimulacao
+        if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
+            self.btnCalcular.clicked.connect(self.calculoSemSimular)
+        else:
+            self.btnCalcular.clicked.connect(self.calculoSimular)
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
         self.diretorioAmostra = diretorioAmostra
         self.tipoAmostragem = tipo
@@ -69,8 +73,6 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
             nivelSignificancia = self.cbSignificancia.currentText().strip('%')
             tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostras()))
-            print(nivelSignificancia, len(self.getAmostras()))
-            print(tb.valoresTtabelado)
 
             amostra = Amostra(self.tipoAmostragem)
             amostra.amostras = self.getAmostras()
@@ -79,12 +81,10 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
 
             pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
 
-            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra,ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
+            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
 
             estACS.calculate()
-
-            
-            
+            estatAmostra.ttab = tb.valoresTtabelado
             self.window = QtWidgets.QMainWindow()
             self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra, tipo=self.tipoAmostragem)
             self.ui.show()
@@ -97,3 +97,9 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         tbAmostra = pd.read_excel(self.diretorioAmostra)
         tbAmostra = tbAmostra['Variavel'].values.tolist()
         return tbAmostra
+
+    def calculoSimular(self):
+        tamanhoAmostra = int(self.tfAmostras.text())
+        nSimulacoes = int(self.tfNumeroSimulacoes.text())
+        nivelSignificancia = self.cbSignificancia.currentText().strip('%')
+        simulation.excuteAll(tamanhoAmostra, nSimulacoes, nivelSignificancia)

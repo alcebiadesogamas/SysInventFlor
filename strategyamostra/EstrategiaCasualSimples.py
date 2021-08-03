@@ -13,7 +13,7 @@ def tab_freq(result, nsim, medverd):
         t_media.append(result[i][0])
         vmin = int(min(t_media))
     vmax = int(max(t_media))
-    a = float(input('Digite a amplitude da classe: '))
+    a = 1 #float(input('Digite a amplitude da classe: '))
     lic = vmin
     lsc = lic + a
     cc = lic + a / 2
@@ -88,37 +88,37 @@ def excuteAll(n, nsim, nst):
     cont2 = tab[5]  # Número de vezes em que o intervalo de confiança não funcionou com o valor de t
     cont3 = tab[6]  # Número de vezes em que o intervalo de confiança funcionou sem o valor de t
     cont4 = tab[7]  # Número de vezes em que o intervalo de confiança não funcionou sem o valor de t
-    print()
-    print('  DISTRIBUIÇÃO DE FREQUÊNCIA DAS MÉDIAS   ')
-    print('-' * 30)
-    print('   CLASSE', end=' ')
-    print('     CENTRO', end=' ')
-    print('    fi')
-    print('-' * 30)
+    # print()
+    # print('  DISTRIBUIÇÃO DE FREQUÊNCIA DAS MÉDIAS   ')
+    # print('-' * 30)
+    # print('   CLASSE', end=' ')
+    # print('     CENTRO', end=' ')
+    # print('    fi')
+    # print('-' * 30)
     lic = float(vmin)
     lsc = lic + a
     f = 0
     for i in range(0, len(tcclas)):
-        print(f'{lic:<4} ← {lsc:>4}    ', end=' ')
-        print(f'{tcclas[i]:<6}   ', end=' ')
+        # print(f'{lic:<4} ← {lsc:>4}    ', end=' ')
+        # print(f'{tcclas[i]:<6}   ', end=' ')
         f = freq[i]
-        print(f'{f:<4} ')
+        # print(f'{f:<4} ')
         lic = lic + a
         lsc = lsc + a
-    print('-' * 30)
-    print(f'Os Intevalos de confiança bem definidos com o valor de t foram: {cont1}')
-    print(f'Os Intevalos de confiança mal definidos com o valor de t foram: {cont2}')
+    # print('-' * 30)
+    # print(f'Os Intevalos de confiança bem definidos com o valor de t foram: {cont1}')
+    # print(f'Os Intevalos de confiança mal definidos com o valor de t foram: {cont2}')
     plt.bar(tcclas, freq)
     plt.show()
-    print()
-    optab = str(input('>>>>>>>>>> Você gostaria de avaliar o efeito do valor de t tabelado[S/N]?'))
-    print()
-    while optab not in 'snSN':
-        print('Opção Inválida: Tente Outra vez.')
-        optab = str(input('>>>>>>>>>> Você gostaria de avaliar o efeito do valor de t tabelado[S/N]?'))
-    if optab == 's' or optab == 'S':
-        print(f'Os Intevalos de confiança bem definidos sem o valor de t foram: {cont3}')
-        print(f'Os Intevalos de confiança mal definidos sem o valor de t foram: {cont4}')
+    # print()
+    # optab = str(input('>>>>>>>>>> Você gostaria de avaliar o efeito do valor de t tabelado[S/N]?'))
+    # print()
+    # while optab not in 'snSN':
+    #     print('Opção Inválida: Tente Outra vez.')
+    #     optab = str(input('>>>>>>>>>> Você gostaria de avaliar o efeito do valor de t tabelado[S/N]?'))
+    # if optab == 's' or optab == 'S':
+    #     print(f'Os Intevalos de confiança bem definidos sem o valor de t foram: {cont3}')
+    #     print(f'Os Intevalos de confiança mal definidos sem o valor de t foram: {cont4}')
 
 if __name__ == '__main__':
     excuteAll(20, 10000, 0.05)

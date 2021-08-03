@@ -1,4 +1,5 @@
 from controller.controllerViewDialogo import ControllerViewDialogo
+import controller.controllerViewOpcao as cvo
 import view.viewSaida as vs
 from PyQt5 import QtCore, QtWidgets
 import controller.controllerViewConfiguracao as cvc
@@ -25,6 +26,13 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
         )
         self.btnSair.clicked.connect(self.sair)
         self.btnVoltar.clicked.connect(self.voltar)
+        self.btnMenuPrincipal.clicked.connect(self.mainMenu)
+
+    def mainMenu(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = cvo.ControllerViewOpcao()
+        self.ui.show()
+        self.close()
 
     def sair(self):
         self.window = QtWidgets.QDialog()
@@ -75,4 +83,4 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
       string += (f'P[{(float(self.estatistica.media)* self.estatistica.AreaTotal - est_min_conf_erro_abs*self.estatistica.AreaTotal):>7.2f} ≤ µ] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
       string += ('-'*122)
       string += (f'\nO valor de ttab. unicaldal ({self.estatistica.tamAmostra - 1 }; {100 - float(self.estatistica.nivelSignificancia)}%) = {float(self.estatistica.ttab[1]):.2f}')
-      self.teSaida.setText(string )
+      self.teSaida.setText(string)
