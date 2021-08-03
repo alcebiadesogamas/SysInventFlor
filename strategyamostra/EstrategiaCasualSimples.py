@@ -3,7 +3,7 @@ from model.Tabela import Tabela
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
-caminho = 'C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/pop.xlsx'
+caminho = './resources/pop.xlsx'
 dados = pd.read_excel(caminho)
 variavel = dados['VAR'].values.tolist()
 
@@ -67,7 +67,7 @@ def excuteAll(n, nsim, nst):
         parcelas.clear()
 
     # Obter o valor tabelado de t com nivel ns e n - 1 graus de liberdade
-    tb = Tabela(diretorio='C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/tabelat.xlsx')
+    tb = Tabela(diretorio='./resources/tabelat.xlsx')
     tb.setValoresTtabelado(nst, n)
     valor_t = tb.valoresTtabelado
     # Calcula as estatísticas para cada simulação

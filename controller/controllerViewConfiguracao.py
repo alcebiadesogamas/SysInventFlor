@@ -72,7 +72,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.close()
 
     def calculoSemSimular(self):
-        tb = tabela.Tabela(diretorio='C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/tabelat.xlsx')
+        tb = tabela.Tabela(diretorio='./resources/tabelat.xlsx')
         
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
@@ -107,7 +107,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
 
     def getAmostrasEstratificada(self):
         tb = tabela.Tabela(
-            diretorio='C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/tabelat.xlsx')
+            diretorio='./resources/tabelat.xlsx')
         amostraACE = pd.read_excel(self.diretorioAmostra,
                                    usecols=['Estratos', 'Variavel', 'Area'],
                                    dtype={'Estratos': int, 'Variavel': float, 'Area': float})

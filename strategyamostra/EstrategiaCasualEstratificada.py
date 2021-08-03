@@ -7,7 +7,7 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
 
 
     def colheAmostras(self, populacao: Populacao=None, tamanhoAmostra=0) -> list:
-        pop = pd.read_excel('C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/pop.xlsx', usecols=['VAR', 'ESTRATO'], dtype={'VAR': float, 'ESTRATO': int})
+        pop = pd.read_excel('./resources/pop.xlsx', usecols=['VAR', 'ESTRATO'], dtype={'VAR': float, 'ESTRATO': int})
         tamanhoEstratos = list()
         estratos = pop['ESTRATO'].values.tolist()
         varEstratos = pop['VAR'].values.tolist()
