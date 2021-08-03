@@ -72,19 +72,19 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
             nivelSignificancia = self.cbSignificancia.currentText().strip('%')
-            tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostras()))
+
 
             amostra = Amostra(self.tipoAmostragem)
-            amostra.amostras = self.getAmostras()
-            
-            estatAmostra = estatistica.Estatistica()
+            if self.tipoAmostragem == 'ACS':
+                tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostrasCasualSimples()))
+                amostra.amostras = self.getAmostrasCasualSimples()
+                estatAmostra = estatistica.Estatistica()
+                pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
+                estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
+                estACS.calculate()
+            elif self.tipoAmostragem == 'ACS':
+               ...
 
-            pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
-
-            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
-
-            estACS.calculate()
-            estatAmostra.ttab = tb.valoresTtabelado
             self.window = QtWidgets.QMainWindow()
             self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra, tipo=self.tipoAmostragem)
             self.ui.show()
@@ -93,7 +93,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         except ValueError:
             print('Erro ao ler amostras')
         
-    def getAmostras(self):
+    def getAmostrasCasualSimples(self):
         tbAmostra = pd.read_excel(self.diretorioAmostra)
         tbAmostra = tbAmostra['Variavel'].values.tolist()
         return tbAmostra
