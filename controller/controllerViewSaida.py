@@ -6,12 +6,13 @@ import controller.controllerViewConfiguracao as cvc
 import model.Estatistica as estats
 
 class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
-    def __init__(self, estatistica: estats.Estatistica, parent=None, state=None, diretorioAmostra='', tipo='') -> None:
+    def __init__(self, result: list, parametros=None, estatistica: estats.Estatistica=None, parent=None, state=None, diretorioAmostra='', tipo='') -> None:
         super().__init__(parent=parent)
         super().setupUi(self)
         self.state = state
         self.diretorioAmostra = diretorioAmostra
         self.tipo = tipo
+        self.result = result
         self.estatistica = estatistica
         self.imprimirResultadoACS()
         self.teSaida.setReadOnly(True)
@@ -84,3 +85,40 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
       string += ('-'*122)
       string += (f'\nO valor de ttab. unicaldal ({self.estatistica.tamAmostra - 1 }; {100 - float(self.estatistica.nivelSignificancia)}%) = {float(self.estatistica.ttab[1]):.2f}')
       self.teSaida.setText(string)
+
+    def imprimirResultadoACE(self):
+
+def IT(result, eaa, ns, area_parcela, nparc, tabela, N, est_min_conf_erro, gl):
+    print('-' * 63)
+    print('       INTERVALOS DE CONFIANÇA PARA A MÉDIA E POR HECTARE')
+    print('-' * 63)
+    print('PARA A MÉDIA       ', end=' ')
+    print(f'P[{result[0][4] - eaa:>7.4f} ≤ µ ≤ {result[0][4] + eaa:>7.4f}] = {100 - ns}%')
+    print('POR HECTARE        ', end=' ')
+    print(
+        f'P[{(result[0][4] - eaa) * (10000 / area_parcela):>7.2f} ≤ µ ≤ {(result[0][4] + eaa) * (10000 / area_parcela):>7.2f}] = {100 - ns}%')
+    print()
+    print('-' * 63)
+    print('                       TOTAL DA POPULAÇÃO ')
+    print('-' * 63)
+    for i in range(0, len(nparc)):
+        print(f'O total do estrato {i + 1} é: {tabela[i][2] * tabela[i][4]:.2f}')
+    print(f'O total geral da população é: {result[0][4] * N:.2f}')
+    print('-' * 63)
+    print()
+    print('-' * 63)
+    print('              INTERVALO DE CONFIANÇA PARA O TOTAL       ')
+    print('-' * 63)
+    print(f'P[{(result[0][4] * N - eaa * N):>7.2f} ≤ µ ≤ {(result[0][4] * N + eaa * N):>7.2f}] = {100 - ns}%')
+    print('-' * 75)
+    print()
+    print('  ESTIMATIVA MÍNIMA DE CONFIANÇA PARA A MÉDIA, POR HECTARE E PARA O TOTAL')
+    print('-' * 75)
+    print('PARA A MÉDIA       ', end=' ')
+    print(f'P[{result[0][4] - est_min_conf_erro:>7.4f} ≤ µ] = {100 - ns}%')
+    print('POR HECTARE        ', end=' ')
+    print(f'P[{(result[0][4] - est_min_conf_erro) * (10000 / area_parcela):>7.2f} ≤ µ] = {100 - ns}%')
+    print('PARA O TOTAL       ', end=' ')
+    print(f'P[{(result[0][4] * N - est_min_conf_erro * N):>7.2f} ≤ µ] = {100 - ns}%')
+    print('-' * 75)
+    print(f'O valor de ttab. unicaldal ({gl}; {100 - ns}%) = {result[1][3]:.2f}')

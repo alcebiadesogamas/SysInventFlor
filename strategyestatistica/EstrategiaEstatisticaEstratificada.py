@@ -3,7 +3,7 @@ from model.Estatistica import Estatistica
 from model.Tabela import Tabela
 from model.Populacao import Populacao
 class HandlerEstatisticaEstratificada:
-    def estat(variaveis, nparc, area_estrato, area_parcela, A, N):
+    def estat(self, variaveis, nparc, area_estrato, area_parcela, A, N):
         parcial = list()
         tabela = list()
         soma = soma2 = cont1 = 0

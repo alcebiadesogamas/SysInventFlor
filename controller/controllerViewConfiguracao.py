@@ -9,6 +9,8 @@ import controller.controllerViewMetodo as cvm
 import pandas as pd
 import strategyestatistica.EstrategiaEstatisticaSimples as estatisticaACS
 import strategyamostra.EstrategiaCasualSimples as simulation
+from strategyamostra.EstrategiaCasualEstratificada import EstrategiaCasualEstratificada
+import strategyestatistica.EstrategiaEstatisticaEstratificada as estatisticaEstratificada
 import controller.controllerViewSaida as cvs
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
@@ -26,17 +28,22 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         )
         self.tfAreaTotalPopulacao.setValidator(QtGui.QDoubleValidator())
         self.tfAreaParcela.setValidator(QtGui.QDoubleValidator())
+        self.tipoAmostragem = tipo
+        self.diretorioAmostra = diretorioAmostra
         self.setSignificancia()
         self.setErroAmostragem()
         self.setTaxaIntervalo()
         self.campoAmostra()
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
-            self.btnCalcular.clicked.connect(self.calculoSemSimular)
+            if self.tipoAmostragem == 'ACS':
+                self.btnCalcular.clicked.connect(self.calculoSemSimular)
+            elif self.tipoAmostragem == 'ACE':
+                self.btnCalcular.clicked.connect(self.getAmostrasEstratificada)
         else:
             self.btnCalcular.clicked.connect(self.calculoSimular)
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
-        self.diretorioAmostra = diretorioAmostra
-        self.tipoAmostragem = tipo
+        if(tipo == 'ACE'):
+            self.tfAreaTotalPopulacao.setDisabled(True)
 
     def campoAmostra(self):
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
@@ -65,7 +72,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.close()
 
     def calculoSemSimular(self):
-        tb = tabela.Tabela(diretorio='C:/Users/Nubia/Documents/SysInventFlor/resources/tabelat.xlsx')
+        tb = tabela.Tabela(diretorio='C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/tabelat.xlsx')
         
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
@@ -98,8 +105,56 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         tbAmostra = tbAmostra['Variavel'].values.tolist()
         return tbAmostra
 
+    def getAmostrasEstratificada(self):
+        tb = tabela.Tabela(
+            diretorio='C:/Users/Gilson/Documents/Projeto_SysInventFlor/SysInventFlor/resources/tabelat.xlsx')
+        amostraACE = pd.read_excel(self.diretorioAmostra,
+                                   usecols=['Estratos', 'Variavel', 'Area'],
+                                   dtype={'Estratos': int, 'Variavel': float, 'Area': float})
+        areas = amostraACE['Area'].values.tolist()
+        variavel = amostraACE['Variavel'].values.tolist()
+        estratos = amostraACE['Estratos'].values.tolist()
+
+        areaEstrato = list()
+        aux = areas[0]
+        areaEstrato.append(aux)
+        for i in range(len(areas)):
+            if areas[i] != aux:
+                areaEstrato.append(areas[i])
+                aux = areas[i]
+
+        estratoAtual = estratos[0]
+        nParcelasEstrato = list()
+        cont = 0
+        for indice, valor in enumerate(estratos):
+            if valor == estratoAtual:
+                cont += 1
+            else:
+                nParcelasEstrato.append(cont)
+                cont = 1
+                estratoAtual = valor
+        nParcelasEstrato.append(cont)
+        N = sum(nParcelasEstrato)
+        areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
+        totalAreaEstrato = sum(areaEstrato)
+        handler = estatisticaEstratificada.HandlerEstatisticaEstratificada()
+        result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato, nparc=nParcelasEstrato, N=N, A=totalAreaEstrato)
+        parametros = list()
+        ns = float(nivelSignificancia = self.cbSignificancia.currentText().strip('%'))
+        parametros.append(ns)
+        parametros.append(areaParcela)
+        parametros.append(nParcelasEstrato)
+        parametros.append(result)
+
+        self.window = QtWidgets.QMainWindow()
+        self.ui = cvs.ControllerViewSaida(parametros=parametros, result=result, state=self.state, diretorioAmostra=self.diretorioAmostra,
+                                          tipo=self.tipoAmostragem)
+        self.ui.show()
+        self.close()
+
     def calculoSimular(self):
         tamanhoAmostra = int(self.tfAmostras.text())
         nSimulacoes = int(self.tfNumeroSimulacoes.text())
         nivelSignificancia = self.cbSignificancia.currentText().strip('%')
         simulation.excuteAll(tamanhoAmostra, nSimulacoes, nivelSignificancia)
+
