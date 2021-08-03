@@ -40,6 +40,3 @@ class Tabela:
         self._valoresTtabelado.append(tabela_t[t1][qtdAmostras - 2])
         self._valoresTtabelado.append(tabela_t[t2][qtdAmostras - 2])
 
-
-if __name__ == '__main__':
-    pass
