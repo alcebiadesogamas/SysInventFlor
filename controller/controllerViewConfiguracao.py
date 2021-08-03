@@ -12,6 +12,7 @@ import strategyamostra.EstrategiaCasualSimples as simulation
 from strategyamostra.EstrategiaCasualEstratificada import EstrategiaCasualEstratificada
 import strategyestatistica.EstrategiaEstatisticaEstratificada as estatisticaEstratificada
 import controller.controllerViewSaida as cvs
+import utils.graus_liberdade as grausDeLiberdade
 
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
     def __init__(self, state, diretorioAmostra, tipo, parent=None):
@@ -126,6 +127,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         estratoAtual = estratos[0]
         nParcelasEstrato = list()
         cont = 0
+        A = sum(areaEstrato)
         for indice, valor in enumerate(estratos):
             if valor == estratoAtual:
                 cont += 1
@@ -134,20 +136,35 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
                 cont = 1
                 estratoAtual = valor
         nParcelasEstrato.append(cont)
-        N = sum(nParcelasEstrato)
         areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
         totalAreaEstrato = sum(areaEstrato)
+        n = sum(nParcelasEstrato)
+        N = (A*10000)/areaParcela
+
+
+
         handler = estatisticaEstratificada.HandlerEstatisticaEstratificada()
-        result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato, nparc=nParcelasEstrato, N=N, A=totalAreaEstrato)
+        result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato, nparc=nParcelasEstrato, N=n, A=totalAreaEstrato)
+
+        ns = float(self.cbSignificancia.currentText().strip('%'))
+        ttabelado = grausDeLiberdade.GL(tabela=result, N=n, ns=ns)
+
+        # Configurando Parâmetros
         parametros = list()
-        ns = float(nivelSignificancia = self.cbSignificancia.currentText().strip('%'))
         parametros.append(ns)
         parametros.append(areaParcela)
         parametros.append(nParcelasEstrato)
-        parametros.append(result)
+        parametros.append(result)  # tabela
+        parametros.append(ttabelado[0])  # resultados
+        parametros.append(ttabelado[4])  #gl
+        parametros.append(ttabelado[2])  # eaa
+        parametros.append(ttabelado[3])  # EstimativaMinimadeConfianca
+        parametros.append(int(N))
+        parametros.append(ttabelado[1])
+
 
         self.window = QtWidgets.QMainWindow()
-        self.ui = cvs.ControllerViewSaida(parametros=parametros, result=result, state=self.state, diretorioAmostra=self.diretorioAmostra,
+        self.ui = cvs.ControllerViewSaida(estatistica=None, parametros=parametros, state=self.state, diretorioAmostra=self.diretorioAmostra,
                                           tipo=self.tipoAmostragem)
         self.ui.show()
         self.close()

@@ -1,3 +1,4 @@
+#calcular eaa est_min_conf_erro
 def IT(result, eaa, ns, area_parcela, nparc, tabela, N, est_min_conf_erro, gl):
     print('-'*63)
     print('       INTERVALOS DE CONFIANÇA PARA A MÉDIA E POR HECTARE')

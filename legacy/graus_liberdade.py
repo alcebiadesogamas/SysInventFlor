@@ -1,10 +1,11 @@
-def GL(tabela, tabela_t, n, N):
+def GL(tabela, tabela_t, N):
     resultados = list()
     ttab = list()
-    medestrat = vmfi = vminfi = vestrat = dpestrat = iam = wt = s1 = den = 0
+    medestrat = vmfi = vminfi = vestrat = dpestrat = iam = wt = s1 = den = n = 0
     for i in range(0, len(tabela)):
         medestrat = medestrat + tabela[i][3] * tabela[i][4]
         wt = wt + tabela[i][3]
+        n = n + tabela[i][1]
         dpestrat = dpestrat + tabela[i][7]
         vestrat = vestrat + tabela[i][8]
         iam = iam + tabela[i][9]

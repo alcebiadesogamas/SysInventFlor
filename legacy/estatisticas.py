@@ -29,7 +29,7 @@ def estat(variaveis, nparc, area_estrato, area_parcela, A, N):
         parcial.append(whs2h)
         whs2hN = whs2h/N
         parcial.append(whs2hN)
-        wh2s2nh = wh**2*var/nh
+        wh2s2nh = wh**2*var/nh # variancia da media infinita
         parcial.append(wh2s2nh)
         wh2s2nhf = wh ** 2 * var / nh*(1 - nh/N)
         parcial.append(wh2s2nhf)
