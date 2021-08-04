@@ -173,5 +173,5 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         tamanhoAmostra = int(self.tfAmostras.text())
         nSimulacoes = int(self.tfNumeroSimulacoes.text())
         nivelSignificancia = self.cbSignificancia.currentText().strip('%')
-        simulation.excuteAll(tamanhoAmostra, nSimulacoes, nivelSignificancia)
+        simulation.excuteAll(tamanhoAmostra, nSimulacoes, nivelSignificancia, self.diretorioAmostra)
 

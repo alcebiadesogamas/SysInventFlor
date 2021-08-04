@@ -3,9 +3,6 @@ from model.Tabela import Tabela
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
-caminho = './resources/pop.xlsx'
-dados = pd.read_excel(caminho)
-variavel = dados['VAR'].values.tolist()
 
 def tab_freq(result, nsim, medverd):
     t_media = []
@@ -54,7 +51,9 @@ def tab_freq(result, nsim, medverd):
             cont4 = cont4 + 1
     return vmin, a, cclas, freq, cont1, cont2, cont3, cont4
 
-def excuteAll(n, nsim, nst):
+def excuteAll(n, nsim, nst, caminho):  
+    dados = pd.read_excel(caminho)
+    variavel = dados['VAR'].values.tolist()
     # NESTE BLOCO, PRIMEIRO SÃO ESCOLHIDAS AO ACASO DA LISTA "parcelas" todas as amostras de acordo com o número de simulações definido.
     # ESTAS PARCELAS SÃO GRAVADAS NA LISTA "parcelas".
     # NA ESTRUTURA WHILE EXTERNA SÃO GRAVADAS NA "lista1" O NÚMERO DE SIMULAÇÕES PARA CADA GRUPO DE n PARCELAS SORTEADAS.
