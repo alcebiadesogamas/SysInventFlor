@@ -2,7 +2,7 @@ from model.Populacao import Populacao
 import pandas as pd
 from strategyamostra.EstrategiaAmostragem import EstrategiaAmostragem
 import random
-from statistics import variance
+from statistics import variance, mean
 
 class EstrategiaCasualEstratificada(EstrategiaAmostragem):
 
@@ -37,7 +37,7 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         for i in range(0, len(nParcelas)):
             amostrasEstratificada.append((random.sample(popEstrat[i], nParcelas[i])))
 
-        return [amostrasEstratificada, tamanhoEstratos, nParcelas]
+        return [amostrasEstratificada, tamanhoEstratos, nParcelas, pesosEstratos]
 
     def pesos(self, tamanhoEstratos, estratos):
         pesosEstratos = list()
@@ -52,16 +52,16 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             parcela = colheita[0]
             tamanhoEstratos = colheita[1]
             nParcelas = colheita[2]
+            pesos = colheita[3]
             if parcela not in amostraColetadas:
                 amostraColetadas.append(parcela)
+
         vars = self.variancias(amostraColetadas)
         Gs = self.calculaGs(tamanhoEstratos, nParcelas)
-
-        # Gs = [2818.29, 3198, 2738.57]
-        # nParcelas = [7, 8, 7]
-        # print(vars)
         n0 = self.calculaN0(vars, Gs, nParcelas)
-        print(n0)
+        print(vars)
+        # self.estat(amostraColetadas, nParcelas, vars, pesos, tamanhoEstratos)
+
 
     def variancias(self, amostraColetadas):
         vars = list()
@@ -87,6 +87,29 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             numerador = 0
             denominador = 0
         return n0
+
+    def estat(self, nSimulacao, nParc, vars, pesos, tamEstrato):
+        parcial = list()
+        tabela = list()
+        N = sum(tamEstrato)
+        for i in range(len(nSimulacao)):
+            for j in range(len(nParc)):
+                wh = pesos[j]
+                med = mean(nSimulacao[j])
+                whMed = wh * med
+                parcial.append(whMed)  # 0
+                var = vars[i][j]
+                print(var)
+            #     desvpad = var**(1/2)
+            #     parcial.append(desvpad)  # 1
+            #     parcial.append(var) # 2
+            #     wh2s2nh = wh**2*var/nParc[i]
+            #     parcial.append(wh2s2nh)  # 3 Variância da média infinita
+            #     wh2s2nhf = (wh ** 2 * var / nParc[i]) * (1 - nParc[i]/N)
+            #     parcial.append(wh2s2nhf)  # 4 Variancia da média finita
+            #     tabela.append(parcial[:])  # 5
+            #     parcial.clear()
+            # return tabela
 
 if __name__ == '__main__':
     ce = EstrategiaCasualEstratificada()
