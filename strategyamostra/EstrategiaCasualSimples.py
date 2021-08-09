@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 
+
 def tab_freq(result, nsim, medverd):
     t_media = []
     for i in range(0, len(result)):
@@ -54,9 +55,6 @@ def tab_freq(result, nsim, medverd):
 def excuteAll(n, nsim, nst, caminho):  
     dados = pd.read_excel(caminho)
     variavel = dados['VAR'].values.tolist()
-    # NESTE BLOCO, PRIMEIRO SÃO ESCOLHIDAS AO ACASO DA LISTA "parcelas" todas as amostras de acordo com o número de simulações definido.
-    # ESTAS PARCELAS SÃO GRAVADAS NA LISTA "parcelas".
-    # NA ESTRUTURA WHILE EXTERNA SÃO GRAVADAS NA "lista1" O NÚMERO DE SIMULAÇÕES PARA CADA GRUPO DE n PARCELAS SORTEADAS.
     lista2 = []
     parcelas = []
     while len(lista2) != nsim:
@@ -65,28 +63,26 @@ def excuteAll(n, nsim, nst, caminho):
             lista2.append(parcelas[:])
         parcelas.clear()
 
-    # Obter o valor tabelado de t com nivel ns e n - 1 graus de liberdade
+
     tb = Tabela(diretorio='./resources/tabelat.xlsx')
     tb.setValoresTtabelado(nst, n)
     valor_t = tb.valoresTtabelado
-    # Calcula as estatísticas para cada simulação
+
     result = estatistica(lista2, variavel, nsim, valor_t[0])
     lmedias = []
     for i in range(0, len(result)):
         lmedias.append(result[i][0])
 
-    # Este bloco analisa os intervalos de confiança
-    # Gerar a tabela de frequências de médias
     medverd = sum(variavel) / len(variavel)
     tab = tab_freq(result, nsim, medverd)
     vmin = tab[0]
     a = tab[1]
-    tcclas = tab[2].copy()  # Tabela com os centros das classes
-    freq = tab[3].copy()  # Tabela com as frequências simples por classes
-    cont1 = tab[4]  # Número de vezes em que o intervalo d econfiança funcionou com o valor de t
-    cont2 = tab[5]  # Número de vezes em que o intervalo de confiança não funcionou com o valor de t
-    cont3 = tab[6]  # Número de vezes em que o intervalo de confiança funcionou sem o valor de t
-    cont4 = tab[7]  # Número de vezes em que o intervalo de confiança não funcionou sem o valor de t
+    tcclas = tab[2].copy()
+    freq = tab[3].copy()
+    cont1 = tab[4]
+    cont2 = tab[5]
+    cont3 = tab[6]
+    cont4 = tab[7]
     # print()
     # print('  DISTRIBUIÇÃO DE FREQUÊNCIA DAS MÉDIAS   ')
     # print('-' * 30)
