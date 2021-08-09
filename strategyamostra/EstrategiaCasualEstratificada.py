@@ -59,8 +59,16 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         vars = self.variancias(amostraColetadas)
         Gs = self.calculaGs(tamanhoEstratos, nParcelas)
         n0 = self.calculaN0(vars, Gs, nParcelas)
-        print(vars)
-        # self.estat(amostraColetadas, nParcelas, vars, pesos, tamanhoEstratos)
+
+        tabelas = list()
+        for i, h in enumerate(amostraColetadas):
+            tabelas.append(self.estat(h, nParcelas, vars[i], pesos, tamanhoEstratos))
+        for i in tabelas:
+            print(i)
+        # somaMediaEstratificada = somaVarFinita = somaVarInfinita = 0
+        # transitoria = list()
+        # listaErros = list()
+
 
 
     def variancias(self, amostraColetadas):
@@ -92,27 +100,21 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         parcial = list()
         tabela = list()
         N = sum(tamEstrato)
-        for i in range(len(nSimulacao)):
-            for j in range(len(nParc)):
-                wh = pesos[j]
-                med = mean(nSimulacao[j])
-                whMed = wh * med
-                parcial.append(whMed)  # 0
-                var = vars[i][j]
-                print(var)
-            #     desvpad = var**(1/2)
-            #     parcial.append(desvpad)  # 1
-            #     parcial.append(var) # 2
-            #     wh2s2nh = wh**2*var/nParc[i]
-            #     parcial.append(wh2s2nh)  # 3 Variância da média infinita
-            #     wh2s2nhf = (wh ** 2 * var / nParc[i]) * (1 - nParc[i]/N)
-            #     parcial.append(wh2s2nhf)  # 4 Variancia da média finita
-            #     tabela.append(parcial[:])  # 5
-            #     parcial.clear()
-            # return tabela
+        for h in range(len(nParc)):
+            med = mean(nSimulacao[h])
+            wh = pesos[h]
+            whMed = wh * med
+            tabela.append(whMed)  # 0 whMed
+            var = vars[h]
+            desvpad = var**(1/2)
+            wh2s2nh = wh**2*var/nParc[h]
+            tabela.append(wh2s2nh)  # 1 Variância da média infinita
+            wh2s2nhf = (wh ** 2 * var / nParc[h]) * (1 - nParc[h]/N)
+            tabela.append(wh2s2nhf)  # 2 Variancia da média finita
+        return tabela
 
 if __name__ == '__main__':
     ce = EstrategiaCasualEstratificada()
     # ce.colheAmostras(tamanhoAmostra=20,diretorio=r'C:\Users\Gilson\Documents\Projeto_SysInventFlor\SysInventFlor\resources\pop.xlsx')
     # a = [[[15.8, 7.6, 8.8, 12.5, 11.1, 16.2, 12.2], [20.4, 30.5, 30.7, 27.2, 28.4, 19.7, 20.4, 23.1], [21.3, 24.3, 29.2, 21.8, 33.1, 35.8, 26.7]], [[15.8, 7.6, 8.8, 12.5, 11.1, 16.2, 12.2], [20.4, 30.5, 30.7, 27.2, 28.4, 19.7, 20.4, 23.1], [21.3, 24.3, 29.2, 21.8, 33.1, 35.8, 26.7]]]
-    ce.simulacoes(tamAmostra=20, nsim=2, diretorio=r'C:\Users\Gilson\Documents\Projeto_SysInventFlor\SysInventFlor\resources\pop.xlsx')
+    ce.simulacoes(tamAmostra=20, nsim=2, diretorio=r'C:\Users\Prof Adriano\Documents\SysInventFlor\resources\pop.xlsx')
