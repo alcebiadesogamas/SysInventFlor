@@ -178,7 +178,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         amp = int(self.tfAmplitudeClasse.text())
         if self.tipoAmostragem == 'ACS':
             cs = SimulaCasualSimples()
-            cs.simular(tamanhoAmostra, nSimulacoes, nivelSignificancia, self.diretorioAmostra, amp)
+            cs.simular(tamanhoAmostra, nSimulacoes, int(nivelSignificancia), self.diretorioAmostra, amp)
         elif self.tipoAmostragem == 'ACE':
             ce = EstrategiaCasualEstratificada(self.diretorioAmostra, 20)
             ce.simulacoes(nSimulacoes, nivelSignificancia, amp)
