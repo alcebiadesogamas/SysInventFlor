@@ -92,7 +92,7 @@ class EstrategiaCasualEstratificada():
         listLimInf = list()
         listLimSup = list()
         listaErros = list()
-        ttab = self.valor_t(ns, n0)
+        ttab = self.valor_t(int(ns), n0)
 
         if self.f < 0.05:
             for i in range(nsim):
