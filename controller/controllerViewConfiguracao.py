@@ -142,8 +142,6 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         n = sum(nParcelasEstrato)
         N = (A*10000)/areaParcela
 
-
-
         handler = estatisticaEstratificada.HandlerEstatisticaEstratificada()
         result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato, nparc=nParcelasEstrato, N=n, A=totalAreaEstrato)
 
