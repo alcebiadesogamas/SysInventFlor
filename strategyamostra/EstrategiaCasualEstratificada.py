@@ -1,26 +1,29 @@
-from model.Populacao import Populacao
 import pandas as pd
-from strategyamostra.EstrategiaAmostragem import EstrategiaAmostragem
 import random
 import matplotlib.pyplot as plt
 from statistics import variance, mean
 
-class EstrategiaCasualEstratificada(EstrategiaAmostragem):
 
-    def colheAmostras(self, tamanhoAmostra=0, diretorio='') -> list:
-        pop = pd.read_excel(diretorio, usecols=['VAR', 'ESTRATO'], dtype={'VAR': float, 'ESTRATO': int})
+class EstrategiaCasualEstratificada():
+    def __init__(self, diretorio, tamanhoAmostra=0):
+        self.pop = pd.read_excel(diretorio, usecols=['VAR', 'ESTRATO'], dtype={'VAR': float, 'ESTRATO': int})
+        self.estratos = self.pop['ESTRATO'].values.tolist()
+        self.varEstratos = self.pop['VAR'].values.tolist()
+        self.paramsEstrat = self.params()
+        self.pesosEstratos = self.pesos(self.paramsEstrat[1], self.estratos)
+        self.nParcelas = [(round(peso * tamanhoAmostra) + 1) for peso in self.pesosEstratos]
+        self.f = sum(self.nParcelas) / len(self.varEstratos)
+
+    def params(self):
         tamanhoEstratos = list()
-        estratos = pop['ESTRATO'].values.tolist()
-        varEstratos = pop['VAR'].values.tolist()
-        estratoAtual = estratos[0]
+        estratoAtual = self.estratos[0]
         popEstrat = list()
         transitoria = list()
-
         cont = 0
-        for indice, valor in enumerate(estratos):
+        for indice, valor in enumerate(self.estratos):
             if valor == estratoAtual:
                 cont += 1
-                transitoria.append(varEstratos[indice])
+                transitoria.append(self.varEstratos[indice])
             else:
                 popEstrat.append(transitoria[:])
                 transitoria.clear()
@@ -31,14 +34,15 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         popEstrat.append(transitoria[:])
         transitoria.clear()
 
-        pesosEstratos = self.pesos(tamanhoEstratos, estratos)
-        nParcelas = [(round(peso * tamanhoAmostra) + 1) for peso in pesosEstratos]
+        return popEstrat, tamanhoEstratos
+
+    def colheAmostras(self) -> list:
         amostrasEstratificada = list()
 
-        for i in range(0, len(nParcelas)):
-            amostrasEstratificada.append((random.sample(popEstrat[i], nParcelas[i])))
+        for i in range(0, len(self.nParcelas)):
+            amostrasEstratificada.append((random.sample(self.paramsEstrat[0][i], self.nParcelas[i])))
 
-        return [amostrasEstratificada, tamanhoEstratos, nParcelas, pesosEstratos]
+        return amostrasEstratificada
 
     def pesos(self, tamanhoEstratos, estratos):
         pesosEstratos = list()
@@ -46,26 +50,19 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             pesosEstratos.append(tamanhoEstratos[i] / len(estratos))
         return pesosEstratos
 
-    def simulacoes(self, tamAmostra, nsim, diretorio, ns):
-        pop = pd.read_excel(diretorio, usecols=['VAR', 'ESTRATO'], dtype={'VAR': float, 'ESTRATO': int})
-        varEstratos = pop['VAR'].values.tolist()
-
+    def simulacoes(self, nsim, ns, amp):
         amostraColetadas = list()
         while len(amostraColetadas) != nsim:
-            colheita = self.colheAmostras(tamanhoAmostra=tamAmostra, diretorio=diretorio)
-            parcela = colheita[0]
-            tamanhoEstratos = colheita[1]
-            nParcelas = colheita[2]
-            pesos = colheita[3]
+            parcela = self.colheAmostras()
             if parcela not in amostraColetadas:
                 amostraColetadas.append(parcela)
 
-        vars = self.variancias(amostraColetadas)
-        Gs = self.calculaGs(tamanhoEstratos, nParcelas)
-        n0 = self.calculaN0(vars, Gs, nParcelas)
+        listVars = self.variancias(amostraColetadas)
+        Gs = self.calculaGs(self.paramsEstrat[1], self.nParcelas)
+        n0 = self.calculaN0(listVars, Gs, self.nParcelas)
         tabelas = list()
         for i, h in enumerate(amostraColetadas):
-            tabelas.append(self.estat(h, nParcelas, vars[i], pesos, tamanhoEstratos))
+            tabelas.append(self.estat(h, self.nParcelas, listVars[i], self.pesosEstratos, self.paramsEstrat[1]))
 
         simulacoes = list()
         transitoria = list()
@@ -91,14 +88,14 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             somaVarInfinita = 0
             somaVarFinita = 0
 
-        f = sum(nParcelas) / len(varEstratos)
+
         tabelaIC = list()
         listLimInf = list()
         listLimSup = list()
         listaErros = list()
         ttab = self.valor_t(ns, n0)
 
-        if f < 0.05:
+        if self.f < 0.05:
             for i in range(nsim):
                 eaa = (simulacoes[i][1] ** (1 / 2)) * ttab[i]
                 limInf = simulacoes[i][0] - eaa
@@ -117,23 +114,24 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         tabelaIC.append(listLimInf[:])
         tabelaIC.append(listLimSup[:])
 
+        mediaVerdadeira = sum(self.varEstratos) / len(self.varEstratos)
+        tab = self.tab_freq(simulacoes, nsim, mediaVerdadeira, tabelaIC, amp)
+        cont1 = tab[3]
+        cont2 = tab[4]
 
-        mediaVerdadeira = sum(varEstratos) / len(varEstratos)
-        tab = self.tab_freq(simulacoes, nsim, mediaVerdadeira, tabelaIC)
-        cont1 = tab[4]
-        cont2 = tab[5]
-        print(f'cont1 = {cont1}', f'cont2 = {cont2}')
-        print(tab)
-        plt.bar(tab[2], tab[3])
+        plt.bar(tab[1], tab[2], tick_label=tab[1])
+        plt.ylabel('frequências')
+        plt.xlabel('classes')
+        saida = (f'Intevalos de confiança bem definidos (com o valor de t): {cont1}\n')
+        saida += (f'Intevalos de confiança mal definidos (com o valor de t): {cont2}')
+        plt.suptitle(saida)
         plt.show()
 
-
-
     def variancias(self, amostraColetadas):
-        vars = list()
+        listVariancias = list()
         for simulacao in amostraColetadas:
-            vars.append(list(map(variance, simulacao)))
-        return vars
+            listVariancias.append(list(map(variance, simulacao)))
+        return listVariancias
 
     def calculaGs(self, tamanhoEstratos, nParcelas):
         Gs = list()
@@ -142,20 +140,19 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             Gs.append(gh)
         return Gs
 
-    def calculaN0(self, vars, Gs, nParcelas):
+    def calculaN0(self, variancias, Gs, nParcelas):
         numerador = denominador = 0
         n0 = list()
-        for i in range(len(vars)):
-            for h in range(len(vars[i])):
-                numerador += (vars[i][h] * Gs[h])
-                denominador += ((Gs[h] ** 2) * (vars[i][h] ** 2)) / (nParcelas[h] - 1)
+        for i in range(len(variancias)):
+            for h in range(len(variancias[i])):
+                numerador += (variancias[i][h] * Gs[h])
+                denominador += ((Gs[h] ** 2) * (variancias[i][h] ** 2)) / (nParcelas[h] - 1)
             n0.append(round(numerador ** 2 / denominador))
             numerador = 0
             denominador = 0
         return n0
 
     def estat(self, nSimulacao, nParc, vars, pesos, tamEstrato):
-        parcial = list()
         tabela = list()
         N = sum(tamEstrato)
         for h in range(len(nParc)):
@@ -164,23 +161,21 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
             whMed = wh * med
             tabela.append(whMed)  # 0 whMed
             var = vars[h]
-            desvpad = var**(1/2)
             wh2s2nh = wh**2*var/nParc[h]
             tabela.append(wh2s2nh)  # 1 Variância da média infinita
             wh2s2nhf = (wh ** 2 * var / nParc[h]) * (1 - nParc[h]/N)
             tabela.append(wh2s2nhf)  # 2 Variancia da média finita
         return tabela
 
-    def tab_freq(self, result, nsim, medverd, tabelaIC):
+    def tab_freq(self, result, nsim, medverd, tabelaIC, amp):
         t_media = []
         for i in range(0, len(result)):
             t_media.append(result[i][0])
-            vmin = int(min(t_media))
+        vmin = int(min(t_media))
         vmax = int(max(t_media))
-        a = 1  # float(input('Digite a amplitude da classe: '))
         lic = vmin
-        lsc = lic + a
-        cc = lic + a / 2
+        lsc = lic + amp
+        cc = lic + amp / 2
         cclas = []
         f = []
         nfreq = []
@@ -188,34 +183,34 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         # Construindo a tabela de frequência
         while cc <= vmax:
             cclas.append(cc)
-            cc = cc + a
+            cc = cc + amp
         if not cclas[len(cclas) - 1] == vmax:
             cclas.append(cc)
         for i in range(0, len(cclas)):
             for j in range(0, len(result)):
-                if result[j][0] >= lic and result[j][0] < lsc:
+                if lic <= result[j][0] < lsc:
                     f.append(result[j][0])
             nfreq.append(f[:])
             freq.append(len(nfreq[i]))
             f.clear()
-            lic = lic + a
-            lsc = lsc + a
-        if freq[len(nfreq) - 1] == []:
+            lic = lic + amp
+            lsc = lsc + amp
+        if not freq[len(nfreq) - 1]:
             nfreq.pop()
             cclas.pop()
-        cont1 = cont2 = cont3 = cont4 = 0
+        cont1 = cont2 = 0
         # Calculando a frequência de acertos para o intervalo de confiança com o valor de t
         for i in range(0, nsim):
-            if medverd >= tabelaIC[0][i] and medverd <= tabelaIC[1][i]:
-                cont1 = cont1 + 1
+            if tabelaIC[0][i] <= medverd <= tabelaIC[1][i]:
+                cont1 += 1
             else:
-                cont2 = cont2 + 1
+                cont2 += 1
 
-        return vmin, a, cclas, freq, cont1, cont2
+        return vmin, cclas, freq, cont1, cont2
 
     def valor_t(self, ns, n0s):
         df_tabela_t = pd.read_excel(r'C:\Users\Nubia\Documents\SysInventFlor\resources\tabelat.xlsx')
-        prob = (df_tabela_t.columns.values)
+        prob = df_tabela_t.columns.values
         tabela_t: list = list()
         for i in range(5):
             coluna_t = df_tabela_t[prob[i]].values.tolist()
@@ -237,7 +232,4 @@ class EstrategiaCasualEstratificada(EstrategiaAmostragem):
         return ttab
 
 if __name__ == '__main__':
-    ce = EstrategiaCasualEstratificada()
-    # ce.colheAmostras(tamanhoAmostra=20,diretorio=r'C:\Users\Gilson\Documents\Projeto_SysInventFlor\SysInventFlor\resources\pop.xlsx')
-    # a = [[[15.8, 7.6, 8.8, 12.5, 11.1, 16.2, 12.2], [20.4, 30.5, 30.7, 27.2, 28.4, 19.7, 20.4, 23.1], [21.3, 24.3, 29.2, 21.8, 33.1, 35.8, 26.7]], [[15.8, 7.6, 8.8, 12.5, 11.1, 16.2, 12.2], [20.4, 30.5, 30.7, 27.2, 28.4, 19.7, 20.4, 23.1], [21.3, 24.3, 29.2, 21.8, 33.1, 35.8, 26.7]]]
-    ce.simulacoes(tamAmostra=20, nsim=10000, diretorio=r'C:\Users\Nubia\Documents\SysInventFlor\resources\pop.xlsx', ns=10)
+    ...

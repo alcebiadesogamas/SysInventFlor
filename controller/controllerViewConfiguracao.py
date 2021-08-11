@@ -8,7 +8,7 @@ from stateviewconfiguracao.EstadoSemSimulacaoViewConfiguracao import EstadoSemSi
 import controller.controllerViewMetodo as cvm
 import pandas as pd
 import strategyestatistica.EstrategiaEstatisticaSimples as estatisticaACS
-import strategyamostra.EstrategiaCasualSimples as simulation
+from strategyamostra.EstrategiaCasualSimples import SimulaCasualSimples
 from strategyamostra.EstrategiaCasualEstratificada import EstrategiaCasualEstratificada
 import strategyestatistica.EstrategiaEstatisticaEstratificada as estatisticaEstratificada
 import controller.controllerViewSaida as cvs
@@ -36,12 +36,15 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.setTaxaIntervalo()
         self.campoAmostra()
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
+            self.tfAmplitudeClasse.setDisabled(True)
             if self.tipoAmostragem == 'ACS':
                 self.btnCalcular.clicked.connect(self.calculoSemSimular)
             elif self.tipoAmostragem == 'ACE':
                 self.btnCalcular.clicked.connect(self.getAmostrasEstratificada)
         else:
             self.btnCalcular.clicked.connect(self.calculoSimular)
+            self.tfAreaTotalPopulacao.setDisabled(True)
+            self.tfAreaParcela.setDisabled(True)
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
         if(tipo == 'ACE'):
             self.tfAreaTotalPopulacao.setDisabled(True)
@@ -173,5 +176,10 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         tamanhoAmostra = int(self.tfAmostras.text())
         nSimulacoes = int(self.tfNumeroSimulacoes.text())
         nivelSignificancia = self.cbSignificancia.currentText().strip('%')
-        simulation.excuteAll(tamanhoAmostra, nSimulacoes, nivelSignificancia, self.diretorioAmostra)
-
+        amp = int(self.tfAmplitudeClasse.text())
+        if self.tipoAmostragem == 'ACS':
+            cs = SimulaCasualSimples()
+            cs.simular(tamanhoAmostra, nSimulacoes, nivelSignificancia, self.diretorioAmostra, amp)
+        elif self.tipoAmostragem == 'ACE':
+            ce = EstrategiaCasualEstratificada(self.diretorioAmostra, 20)
+            ce.simulacoes(nSimulacoes, nivelSignificancia, amp)
