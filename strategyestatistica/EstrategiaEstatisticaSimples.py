@@ -30,10 +30,11 @@ class HandlerEstatistica:
         self.estatistica.fFracaoDeAmostragem = (len(self.amostra) / self.populacao.totalParcelas)
 
         if self.estatistica.fFracaoDeAmostragem <= 0.05:
-            self.populacao.tipo = 'Finita'
+            self.populacao.tipo = 'Infinita'
             self.estatistica.varianciaDaMedia = (self.estatistica.variancia / len(self.amostra))
         else:
-            self.populacao.tipo = 'Infinita'
+            self.populacao.tipo = 'Finita'
             self.estatistica.varianciaDaMedia = (self.estatistica.variancia / len(self.amostra)) * (1 - self.estatistica.fFracaoDeAmostragem)
         self.estatistica.erroPadraoDaMedia = self.estatistica.varianciaDaMedia ** (1 / 2)
         self.estatistica.erroDeAmostragemAbsoluto = self.estatistica.erroPadraoDaMedia * self.ttabelado.valoresTtabelado[0]
+        self.estatistica.erroDeAmostragemRelativo = (self.estatistica.erroDeAmostragemAbsoluto / self.estatistica.media) * 100

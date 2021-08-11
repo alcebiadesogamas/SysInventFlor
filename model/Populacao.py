@@ -3,7 +3,7 @@ class Populacao:
     def __init__(self, areaParcelas=0, areaTotal=0) -> None:
         self._areaParcelas: float = areaParcelas
         self._areaTotal: float = areaTotal
-        self._totalParcelas: float = areaTotal/areaParcelas
+        self._totalParcelas: float = (areaTotal*10000)/areaParcelas
         self._tipo: str = ''
 
     @property

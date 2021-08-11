@@ -50,6 +50,7 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
         self.close()
 
     def imprimirResultadoACS(self):
+      N = int((self.estatistica.AreaTotal * 10000) / self.estatistica.areaParcela)
       string = ' '*30 +'ESTATÍSTICAS DA AMOSTRAGEM CASUAL SIMPLES           \n'+'-'*122 + '\n PARÂMETRO ESTIMADO'+ ' '*30 +'ESTIMATIVA DO PARÂMETRO\n' + '-'*122 + '\n'
       string += (f' Média                                                                               {self.estatistica.media:>10.4f}\n')
       string += (f' Variância                                                                          {self.estatistica.variancia:>10.4f}\n')
@@ -71,10 +72,10 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
       string += ('-'*122)
       string += ('\n'+ ' '*30 +'TOTAL DA POPULAÇÃO\n')
       string += ('-'*122)
-      string += (f'\nO total geral da população é: {self.estatistica.media*self.estatistica.AreaTotal:.2f}\n')
+      string += (f'\nO total geral da população é: {(self.estatistica.media*N):.2f}\n')
       string += ('-'*122)
       string += ('\n'+ ' '*30 +'INTERVALO DE CONFIANÇA PARA O TOTAL\n')
-      string += (f'P[{(float(self.estatistica.media)*float(self.estatistica.AreaTotal) - float(self.estatistica.erroDeAmostragemAbsoluto)*float(self.estatistica.AreaTotal)):>7.2f} ≤ µ ≤ {(float(self.estatistica.media)*float(self.estatistica.AreaTotal) + float(self.estatistica.erroDeAmostragemAbsoluto)*float(self.estatistica.AreaTotal)):>7.2f}] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
+      string += (f'P[{(float(self.estatistica.media)*N - float(self.estatistica.erroDeAmostragemAbsoluto)*N):>7.2f} ≤ µ ≤ {(float(self.estatistica.media)*N + float(self.estatistica.erroDeAmostragemAbsoluto)*N):>7.2f}] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
       string += ('-'*122)
       string += ('ESTIMATIVA MÍNIMA DE CONFIANÇA PARA A MÉDIA, POR HECTARE E PARA O TOTAL\n')
       string += ('-'*122)
@@ -84,7 +85,7 @@ class ControllerViewSaida(QtWidgets.QMainWindow, vs.Ui_viewSaida):
       string += ('POR HECTARE\t\t')
       string += (f'P[{(float(self.estatistica.media) - est_min_conf_erro_abs)*(10000/float(self.estatistica.areaParcela)):>7.2f} ≤ µ] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
       string += ('PARA O TOTAL\t\t')
-      string += (f'P[{(float(self.estatistica.media)* self.estatistica.AreaTotal - est_min_conf_erro_abs*self.estatistica.AreaTotal):>7.2f} ≤ µ] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
+      string += (f'P[{(float(self.estatistica.media)* N - est_min_conf_erro_abs*N):>7.2f} ≤ µ] = {100 - float(self.estatistica.nivelSignificancia)}%\n')
       string += ('-'*122)
       string += (f'\nO valor de ttab. unicaldal ({self.estatistica.tamAmostra - 1 }; {100 - float(self.estatistica.nivelSignificancia)}%) = {float(self.estatistica.ttab[1]):.2f}')
       self.teSaida.setText(string)
