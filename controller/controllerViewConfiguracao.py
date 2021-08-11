@@ -14,6 +14,7 @@ import strategyestatistica.EstrategiaEstatisticaEstratificada as estatisticaEstr
 import controller.controllerViewSaida as cvs
 import utils.graus_liberdade as grausDeLiberdade
 
+
 class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
     def __init__(self, state, diretorioAmostra, tipo, parent=None):
         super().__init__(parent)
@@ -38,9 +39,9 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         if isinstance(self.state, EstadoSemSimulacaoViewConfiguracao):
             self.tfAmplitudeClasse.setDisabled(True)
             if self.tipoAmostragem == 'ACS':
-                self.btnCalcular.clicked.connect(self.calculoSemSimular)
+                self.btnCalcular.clicked.connect(self.calculoSemSimularACS)
             elif self.tipoAmostragem == 'ACE':
-                self.btnCalcular.clicked.connect(self.getAmostrasEstratificada)
+                self.btnCalcular.clicked.connect(self.calculoSemSimularACE)
         else:
             self.btnCalcular.clicked.connect(self.calculoSimular)
             self.tfAreaTotalPopulacao.setDisabled(True)
@@ -75,7 +76,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         self.ui.show()
         self.close()
 
-    def calculoSemSimular(self):
+    def calculoSemSimularACS(self):
         tb = tabela.Tabela(diretorio='./resources/tabelat.xlsx')
         
         try:
@@ -84,17 +85,14 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
             nivelSignificancia = self.cbSignificancia.currentText().strip('%')
 
-
             amostra = Amostra(self.tipoAmostragem)
-            if self.tipoAmostragem == 'ACS':
-                tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostrasCasualSimples()))
-                amostra.amostras = self.getAmostrasCasualSimples()
-                estatAmostra = estatistica.Estatistica()
-                pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
-                estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
-                estACS.calculate()
-            elif self.tipoAmostragem == 'ACS':
-               ...
+
+            tb.setValoresTtabelado(float(nivelSignificancia), len(self.getAmostrasCasualSimples()))
+            amostra.amostras = self.getAmostrasCasualSimples()
+            estatAmostra = estatistica.Estatistica()
+            pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
+            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
+            estACS.calculate()
 
             self.window = QtWidgets.QMainWindow()
             self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra, tipo=self.tipoAmostragem)
@@ -109,7 +107,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         tbAmostra = tbAmostra['Variavel'].values.tolist()
         return tbAmostra
 
-    def getAmostrasEstratificada(self):
+    def calculoSemSimularACE(self):
         tb = tabela.Tabela(
             diretorio='./resources/tabelat.xlsx')
         amostraACE = pd.read_excel(self.diretorioAmostra,

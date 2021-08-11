@@ -88,7 +88,6 @@ class EstrategiaCasualEstratificada():
             somaVarInfinita = 0
             somaVarFinita = 0
 
-
         tabelaIC = list()
         listLimInf = list()
         listLimSup = list()
@@ -122,8 +121,8 @@ class EstrategiaCasualEstratificada():
         plt.bar(tab[1], tab[2], tick_label=tab[1])
         plt.ylabel('frequências')
         plt.xlabel('classes')
-        saida = (f'Intevalos de confiança bem definidos (com o valor de t): {cont1}\n')
-        saida += (f'Intevalos de confiança mal definidos (com o valor de t): {cont2}')
+        saida = f'Intevalos de confiança bem definidos (com o valor de t): {cont1}\n'
+        saida += f'Intevalos de confiança mal definidos (com o valor de t): {cont2}'
         plt.suptitle(saida)
         plt.show()
 
@@ -209,7 +208,7 @@ class EstrategiaCasualEstratificada():
         return vmin, cclas, freq, cont1, cont2
 
     def valor_t(self, ns, n0s):
-        df_tabela_t = pd.read_excel(r'C:\Users\Nubia\Documents\SysInventFlor\resources\tabelat.xlsx')
+        df_tabela_t = pd.read_excel(r'./resources/tabelat.xlsx')
         prob = df_tabela_t.columns.values
         tabela_t: list = list()
         for i in range(5):
