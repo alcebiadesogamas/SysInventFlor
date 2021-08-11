@@ -47,7 +47,7 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             self.tfAreaTotalPopulacao.setDisabled(True)
             self.tfAreaParcela.setDisabled(True)
         self.btnVoltar.clicked.connect(self.btnVoltarPressed)
-        if(tipo == 'ACE'):
+        if tipo == 'ACE':
             self.tfAreaTotalPopulacao.setDisabled(True)
 
     def campoAmostra(self):
