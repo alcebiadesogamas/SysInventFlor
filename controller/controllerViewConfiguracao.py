@@ -78,10 +78,10 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
 
     def calculoSemSimularACS(self):
         tb = tabela.Tabela(diretorio='./resources/tabelat.xlsx')
-        
+
         try:
             areaTotal = float(self.tfAreaTotalPopulacao.text().replace(',', '.'))
-            
+
             areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
             nivelSignificancia = self.cbSignificancia.currentText().strip('%')
 
@@ -91,17 +91,19 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
             amostra.amostras = self.getAmostrasCasualSimples()
             estatAmostra = estatistica.Estatistica()
             pop = populacao.Populacao(areaTotal=areaTotal, areaParcelas=areaParcela)
-            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras, populacao=pop, nivelSignificancia=nivelSignificancia)
+            estACS = estatisticaACS.HandlerEstatistica(estatistica=estatAmostra, ttabelado=tb, amostra=amostra.amostras,
+                                                       populacao=pop, nivelSignificancia=nivelSignificancia)
             estACS.calculate()
 
             self.window = QtWidgets.QMainWindow()
-            self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra, tipo=self.tipoAmostragem)
+            self.ui = cvs.ControllerViewSaida(estatAmostra, state=self.state, diretorioAmostra=self.diretorioAmostra,
+                                              tipo=self.tipoAmostragem)
             self.ui.show()
             self.close()
 
         except ValueError:
             print('Erro ao ler amostras')
-        
+
     def getAmostrasCasualSimples(self):
         tbAmostra = pd.read_excel(self.diretorioAmostra)
         tbAmostra = tbAmostra['Variavel'].values.tolist()
@@ -140,10 +142,11 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         areaParcela = float(self.tfAreaParcela.text().replace(',', '.'))
         totalAreaEstrato = sum(areaEstrato)
         n = sum(nParcelasEstrato)
-        N = (A*10000)/areaParcela
+        N = (A * 10000) / areaParcela
 
         handler = estatisticaEstratificada.HandlerEstatisticaEstratificada()
-        result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato, nparc=nParcelasEstrato, N=n, A=totalAreaEstrato)
+        result = handler.estat(variaveis=variavel, area_parcela=areaParcela, area_estrato=areaEstrato,
+                               nparc=nParcelasEstrato, N=n, A=totalAreaEstrato)
 
         ns = float(self.cbSignificancia.currentText().strip('%'))
         ttabelado = grausDeLiberdade.GL(tabela=result, N=n, ns=ns)
@@ -155,15 +158,15 @@ class ControllerViewConfiguracao(QtWidgets.QMainWindow, Ui_ViewConfiguracao):
         parametros.append(nParcelasEstrato)
         parametros.append(result)  # tabela
         parametros.append(ttabelado[0])  # resultados
-        parametros.append(ttabelado[4])  #gl
+        parametros.append(ttabelado[4])  # gl
         parametros.append(ttabelado[2])  # eaa
         parametros.append(ttabelado[3])  # EstimativaMinimadeConfianca
         parametros.append(int(N))
         parametros.append(ttabelado[1])
 
-
         self.window = QtWidgets.QMainWindow()
-        self.ui = cvs.ControllerViewSaida(estatistica=None, parametros=parametros, state=self.state, diretorioAmostra=self.diretorioAmostra,
+        self.ui = cvs.ControllerViewSaida(estatistica=None, parametros=parametros, state=self.state,
+                                          diretorioAmostra=self.diretorioAmostra,
                                           tipo=self.tipoAmostragem)
         self.ui.show()
         self.close()
