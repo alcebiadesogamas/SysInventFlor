@@ -70,8 +70,8 @@ class SimulaCasualSimples:
         plt.bar(tab[2], tab[3], tick_label=tab[2])
         plt.ylabel('frequências')
         plt.xlabel('classes')
-        saida = f'Intevalos de confiança bem definidos (com o valor de t): {tab[4]}\n'
-        saida += f'Intevalos de confiança mal definidos (com o valor de t): {tab[5]}'
+        saida = f'Intevalos de confiança bem definidos: {tab[4]}\n'
+        saida += f'Intevalos de confiança mal definidos: {tab[5]}'
         plt.suptitle(saida)
         plt.show()
 

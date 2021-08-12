@@ -1,5 +1,6 @@
 def soma_quadrados(x):
-    return(x**2)
+    return x ** 2
+
 
 def estatistica(lista1, variavel, nsim, ttab):
     soma = sq = med = 0
@@ -13,7 +14,7 @@ def estatistica(lista1, variavel, nsim, ttab):
         varmed = var / len(lista1[i])
         epmed = varmed ** (1 / 2)
         eaa = epmed * ttab
-        ear = (eaa/med)*100
+        ear = (eaa / med) * 100
         li = (med - eaa)
         ls = (med + eaa)
         li1 = (med - epmed)
@@ -33,4 +34,4 @@ def estatistica(lista1, variavel, nsim, ttab):
         resultados.append(transicao[:])
         soma = med = sq = var = varmed = epmed = eaa = li = ls = li1 = ls1 = 0
         transicao.clear()
-    return(resultados)
+    return (resultados)

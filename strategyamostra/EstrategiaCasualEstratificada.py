@@ -121,8 +121,8 @@ class EstrategiaCasualEstratificada():
         plt.bar(tab[1], tab[2], tick_label=tab[1])
         plt.ylabel('frequências')
         plt.xlabel('classes')
-        saida = f'Intevalos de confiança bem definidos (com o valor de t): {cont1}\n'
-        saida += f'Intevalos de confiança mal definidos (com o valor de t): {cont2}'
+        saida = f'Intevalos de confiança bem definidos: {cont1}\n'
+        saida += f'Intevalos de confiança mal definidos: {cont2}'
         plt.suptitle(saida)
         plt.show()
 
@@ -229,6 +229,7 @@ class EstrategiaCasualEstratificada():
             nAmostra = n0s[i] - 1
             ttab.append(tabela_t[t1][nAmostra])
         return ttab
+
 
 if __name__ == '__main__':
     ...
